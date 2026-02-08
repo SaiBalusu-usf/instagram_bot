@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Session files (contains login cookies)
+*_session.json
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
