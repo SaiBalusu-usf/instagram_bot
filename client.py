@@ -1,5 +1,6 @@
 from instagrapi import Client
-from instagrapi.exceptions import LoginRequired
+
+from instagrapi.exceptions import LoginRequired, TwoFactorRequired
 import os
 import time
 import random
@@ -22,6 +23,11 @@ class InstagramBot:
         try:
             self.client.login(self.username, self.password)
             print("Logged in successfully.")
+            self.client.dump_settings(self.session_file)
+        except TwoFactorRequired:
+            code = input("2FA Code required: ")
+            self.client.two_factor_login(code)
+            print("Logged in successfully (2FA).")
             self.client.dump_settings(self.session_file)
         except Exception as e:
             print(f"Login failed: {e}")
