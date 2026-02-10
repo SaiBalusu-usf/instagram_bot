@@ -4,13 +4,27 @@ from instagrapi.exceptions import LoginRequired, TwoFactorRequired
 import os
 import time
 import random
+from config import PROXY_URL, MIN_DELAY, MAX_DELAY
 
 class InstagramBot:
     def __init__(self, username, password):
         self.client = Client()
+        if PROXY_URL:
+            print(f"Setting proxy: {PROXY_URL}")
+            self.client.set_proxy(PROXY_URL)
+        
         self.username = username
         self.password = password
         self.session_file = f"{username}_session.json"
+
+    def random_sleep(self):
+        """
+        Sleeps for a random duration between MIN_DELAY and MAX_DELAY.
+        Adds a small Gaussian variation for more human-like behavior.
+        """
+        delay = random.uniform(MIN_DELAY, MAX_DELAY)
+        print(f"Sleeping for {delay:.2f} seconds...")
+        time.sleep(delay)
 
     def login(self):
         """
@@ -101,7 +115,7 @@ class InstagramBot:
                 try:
                     self.client.media_like(media.id)
                     print(f"Liked post {media.id} by {media.user.username}")
-                    time.sleep(random.randint(5, 15)) # Random delay
+                    self.random_sleep()
                 except Exception as e:
                     print(f"Failed to like post {media.id}: {e}")
         except Exception as e:
